@@ -1,7 +1,7 @@
-from games.kuhn_poker import Move, GameState
+from games.leduc_poker import Move, GameState
 
 def regret_matching(regret_sum_current_set: dict[Move, float], possible_moves: list[Move]) -> dict[Move, float]:
-    """ 
+    """
     Returns the strategy as ({action: chance}) dictionary.
     Only moves that the program regrets not doing have positive reach probability.
     """
@@ -14,7 +14,7 @@ def regret_matching(regret_sum_current_set: dict[Move, float], possible_moves: l
     if positive_regrets_sum == 0:    # All moves should have the same chance.
         for move in possible_moves:
             chances[move] = 1 / len(possible_moves)
-    else:      
+    else:
         for move in possible_moves:
             if regret_sum_current_set[move] > 0:
                 chances[move] = regret_sum_current_set[move] / positive_regrets_sum
@@ -30,25 +30,33 @@ class CFRTrainer:
         self.strategy_sum: dict[tuple, dict[Move, float]] = {}  # Cumulative reach-weighted strategy for each action
 
     def cfr(self, game_state: GameState, reach_probability: list) -> float:
-        """ Recursively computes the value of game_state (from player 1's perspective), 
+        """ Recursively computes the value of game_state (from player 1's perspective),
             updating regret_sum and strategy_sum along the way."""
+        possible_moves = game_state.possible_moves()
+
+        round_over = game_state.round_move_history and (game_state.round_move_history[-1] == Move.CALL or
+            (len(game_state.round_move_history) > 1 and game_state.round_move_history[-2:] == [Move.CHECK, Move.CHECK]))
+
+        if round_over and game_state.round_number == 1:
+            game_state = game_state.next_round()
+            possible_moves = game_state.possible_moves()
+        elif len(possible_moves) == 0:
+            return game_state.first_player_payoff()
+
         player = game_state.current_player()
         information_set = game_state.information_set()
 
-        if len(game_state.possible_moves()) == 0:
-            return game_state.first_player_payoff()
-            
         if information_set not in self.regret_sum:
             self.regret_sum[information_set] = {}
-            for move in game_state.possible_moves():
+            for move in possible_moves:
                 self.regret_sum[information_set][move] = 0
-                
+
         if information_set not in self.strategy_sum:
             self.strategy_sum[information_set] = {}
-            for move in game_state.possible_moves():
+            for move in possible_moves:
                 self.strategy_sum[information_set][move] = 0
 
-        strategy = regret_matching(self.regret_sum[information_set], game_state.possible_moves())
+        strategy = regret_matching(self.regret_sum[information_set], possible_moves)
 
         move_value = {}
         info_set_result = 0
@@ -72,9 +80,6 @@ class CFRTrainer:
             self.regret_sum[information_set][move] += (difference * reach_probability[player ^ 1])
 
             # Accumulated strategy, averaged after training. Only the time-averaged strategy is guaranteed to converge to a Nash equilibrium.
-            self.strategy_sum[information_set][move] += (strategy[move] * reach_probability[player])                             
+            self.strategy_sum[information_set][move] += (strategy[move] * reach_probability[player])
 
         return info_set_result
-
-    def strategy_sum(self):
-        return self.strategy_sum

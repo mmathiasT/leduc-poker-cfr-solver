@@ -1,4 +1,4 @@
-from train import training
+from train_kuhn import training
 from games.kuhn_poker import Move, Card
 
 def strategy() -> dict[tuple, dict[Move, float]]:

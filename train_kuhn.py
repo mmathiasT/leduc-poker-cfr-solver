@@ -1,5 +1,5 @@
 from games.kuhn_poker import Card, GameState, Move
-from cfr.cfr import CFRTrainer
+from cfr.cfr_kuhn import CFRTrainer
 
 def possible_hands() -> list[list[Card]]:
     result: list[list[Card]] = []
@@ -22,7 +22,7 @@ def training(iterations: int) -> dict[tuple, dict[Move, float]]:
         for hand in hands:
             trainer.cfr(GameState(hand, []), [1, 1])
 
-    strategy_sum = trainer.strategy_sum 
+    strategy_sum = trainer.strategy_sum
     final_strategy: dict[tuple, dict[Move, float]] = {}
 
     for information_set, moves in strategy_sum.items():

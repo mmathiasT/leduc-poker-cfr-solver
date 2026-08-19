@@ -4,7 +4,6 @@ from games.kuhn_poker import Move, Card
 def strategy() -> dict[tuple, dict[Move, float]]:
     return training(10000)
 
-
 def test_kings_call():
     result_strategy = strategy()
     assert result_strategy[(Card.K, (Move.BET, ))][Move.CALL] > 0.95

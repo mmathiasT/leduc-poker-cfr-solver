@@ -5,3 +5,4 @@ venv/
 .venv/
 *.egg-info/
 .vscode/
+db.sqlite3

@@ -29,7 +29,3 @@ def training(iterations: int) -> dict[tuple, dict[Move, float]]:
                 final_strategy[information_set][move] = strategy_sum[information_set][move] / possible_moves_sum
 
     return final_strategy
-
-if __name__ == "__main__":
-    final_strategy = training(100)
-    print(final_strategy)

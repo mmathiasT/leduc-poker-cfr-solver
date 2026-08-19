@@ -1,0 +1,54 @@
+<style>
+    body { font-family: sans-serif; max-width: 500px; margin: 2rem auto; line-height: 1.5; }
+    .balances { display: flex; gap: 2rem; margin-bottom: 1rem; }
+    .balances span { font-weight: bold; }
+    .plus { color: #1a7f37; }
+    .minus { color: #cf222e; }
+    .card { font-size: 1.3rem; font-weight: bold; }
+    ul { padding-left: 1.2rem; }
+    .history li { margin-bottom: 0.3rem; }
+    .dist { color: #666; font-size: 0.9rem; }
+    form { display: inline-block; margin-right: 0.5rem; }
+    button { padding: 0.4rem 0.9rem; }
+</style>
+
+<div class="balances">
+    <span>You: <span class="{% if player_balance > 0 %}plus{% elif player_balance < 0 %}minus{% endif %}">{{ player_balance }}</span></span>
+    <span>Bot: <span class="{% if bot_balance > 0 %}plus{% elif bot_balance < 0 %}minus{% endif %}">{{ bot_balance }}</span></span>
+</div>
+
+<p class="card">Your card: {{ player_card }}</p>
+
+{% if community_card %}
+    <p class="card">Community card: {{ community_card }}</p>
+{% endif %}
+
+<p>Pot: {{ pot_total }} total (you: {{ contributions.0 }}, bot: {{ contributions.1 }}) &nbsp;|&nbsp; Bet size this round: {{ bet_size }}</p>
+
+{% if game_over %}
+    <p><strong>Game over. Your payoff: {{ payoff }}</strong></p>
+    <a href="{% url 'start_game' %}">New game</a>
+{% else %}
+    <h3>Your possible moves:</h3>
+    {% for move in possible_moves %}
+        <form method="post" action="{% url 'act' %}">
+            {% csrf_token %}
+            <input type="hidden" name="move" value="{{ move.value }}">
+            <button type="submit">{{ move.value }}</button>
+        </form>
+    {% endfor %}
+{% endif %}
+
+<h3>Move history:</h3>
+<ul class="history">
+{% for entry in history_log %}
+    <li>
+        {{ entry.player }}: {{ entry.move }}
+        {% if entry.distribution %}
+            <span class="dist">
+                ({% for move_value, percent in entry.distribution %}{{ move_value }}: {{ percent }}%{% if not forloop.last %}, {% endif %}{% endfor %})
+            </span>
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>

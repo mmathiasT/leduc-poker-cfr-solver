@@ -4,9 +4,9 @@ A poker bot for Leduc Hold'em (a small poker game used in game theory research),
 trained from scratch with Counterfactual Regret Minimization (CFR). Includes a small
 Django web app to play against it.
 
-<img src="pregame_screenshot.png" width="48%" alt="Screenshot of the game interface before the round" align="left" />
-<img src="postgame_screenshot.png" width="48%" alt="Screenshot of the game interface after the round" align="left" />
-<br clear="left" />
+| Before the round | After the round |
+|---|---|
+| ![Before the round](pregame_screenshot.png) | ![After the round](postgame_screenshot.png) |
 
 ## Why Leduc Hold'em
 

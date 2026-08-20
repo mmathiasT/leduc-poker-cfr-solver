@@ -1,15 +1,104 @@
 <style>
-    body { font-family: sans-serif; max-width: 500px; margin: 2rem auto; line-height: 1.5; }
-    .balances { display: flex; gap: 2rem; margin-bottom: 1rem; }
-    .balances span { font-weight: bold; }
-    .plus { color: #1a7f37; }
-    .minus { color: #cf222e; }
-    .card { font-size: 1.3rem; font-weight: bold; }
-    ul { padding-left: 1.2rem; }
-    .history li { margin-bottom: 0.3rem; }
-    .dist { color: #666; font-size: 0.9rem; }
-    form { display: inline-block; margin-right: 0.5rem; }
-    button { padding: 0.4rem 0.9rem; }
+    body {
+        font-family: Georgia, serif;
+        background: #dce7f2;
+        color: #222;
+        max-width: 480px;
+        margin: 3rem auto;
+        padding: 0 1rem;
+    }
+
+    .balances {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+        color: #555;
+    }
+    .plus { color: #2e7d32; }
+    .minus { color: #b71c1c; }
+
+    .table {
+        background: #bcd9f2;
+        border-radius: 6px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .cards {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .playing-card {
+        background: #fdfcf8;
+        border-radius: 4px;
+        width: 60px;
+        height: 84px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #222;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .playing-card.hidden {
+        background: #3d3d3d;
+        color: #3d3d3d;
+        border: 2px dashed #666;
+    }
+
+    .card-label {
+        color: #3a5a80;
+        font-size: 0.8rem;
+        margin-top: -0.7rem;
+        margin-bottom: 1rem;
+    }
+
+    .pot-line {
+        color: #2c4a6e;
+        font-size: 0.9rem;
+    }
+
+    .actions {
+        margin-top: 1.5rem;
+        text-align: center;
+    }
+    form { display: inline-block; margin: 0 0.3rem; }
+    button {
+        font-family: inherit;
+        font-size: 0.95rem;
+        padding: 0.5rem 1.2rem;
+        border: 1px solid #16345c;
+        background: #1c3f6e;
+        color: #fff;
+        cursor: pointer;
+    }
+    button:hover { background: #16345c; }
+
+    .result {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 1.1rem;
+        color: #16345c;
+    }
+    .result a { color: #16345c; text-decoration: underline; }
+
+    h3 {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #1c3f6e;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 0.3rem;
+        margin-top: 2rem;
+    }
+    ul { list-style: none; padding: 0; font-size: 0.9rem; }
+    li { padding: 0.25rem 0; border-bottom: 1px dotted #ddd; }
+    .dist { color: #888; }
 </style>
 
 <div class="balances">
@@ -17,30 +106,36 @@
     <span>Bot: <span class="{% if bot_balance > 0 %}plus{% elif bot_balance < 0 %}minus{% endif %}">{{ bot_balance }}</span></span>
 </div>
 
-<p class="card">Your card: {{ player_card }}</p>
+<div class="table">
+    <div class="cards">
+        <div class="playing-card">{{ player_card }}</div>
+        {% if community_card %}
+            <div class="playing-card">{{ community_card }}</div>
+        {% else %}
+            <div class="playing-card hidden">?</div>
+        {% endif %}
+    </div>
+    <div class="card-label">your card &nbsp;&nbsp;&nbsp;&nbsp; community</div>
 
-{% if community_card %}
-    <p class="card">Community card: {{ community_card }}</p>
-{% endif %}
+    <p class="pot-line">Pot: {{ pot_total }} (you: {{ contributions.0 }}, bot: {{ contributions.1 }}) &nbsp;·&nbsp; bet size: {{ bet_size }}</p>
 
-<p>Pot: {{ pot_total }} total (you: {{ contributions.0 }}, bot: {{ contributions.1 }}) &nbsp;|&nbsp; Bet size this round: {{ bet_size }}</p>
+    {% if game_over %}
+        <p class="result">Game over — your payoff: {{ payoff }}<br><a href="{% url 'start_game' %}">New game</a></p>
+    {% else %}
+        <div class="actions">
+            {% for move in possible_moves %}
+                <form method="post" action="{% url 'act' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="move" value="{{ move.value }}">
+                    <button type="submit">{{ move.value }}</button>
+                </form>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
 
-{% if game_over %}
-    <p><strong>Game over. Your payoff: {{ payoff }}</strong></p>
-    <a href="{% url 'start_game' %}">New game</a>
-{% else %}
-    <h3>Your possible moves:</h3>
-    {% for move in possible_moves %}
-        <form method="post" action="{% url 'act' %}">
-            {% csrf_token %}
-            <input type="hidden" name="move" value="{{ move.value }}">
-            <button type="submit">{{ move.value }}</button>
-        </form>
-    {% endfor %}
-{% endif %}
-
-<h3>Move history:</h3>
-<ul class="history">
+<h3>Move history</h3>
+<ul>
 {% for entry in history_log %}
     <li>
         {{ entry.player }}: {{ entry.move }}

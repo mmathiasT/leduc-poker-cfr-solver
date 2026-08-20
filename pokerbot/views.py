@@ -49,6 +49,9 @@ def log_move(session, player, move_value, distribution):
     session["history_log"] = history
 
 def game(request):
+    if "players_cards" not in request.session:
+        return redirect("start_game")
+
     game_state = load_game_state(request.session)
 
     while game_state.possible_moves() and game_state.current_player() == 1:

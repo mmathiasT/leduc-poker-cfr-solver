@@ -65,14 +65,7 @@ environment — see `.env.example`.
 ## Running the tests
 
 ```bash
-pytest
-```
-
-## Linting
-
-```bash
-pip install -r requirements-dev.txt
-ruff check .
+python3 -m pytest
 ```
 
 ## Project structure

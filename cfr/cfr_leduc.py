@@ -1,4 +1,5 @@
-from games.leduc_poker import Move, GameState
+from games.leduc_poker import GameState, Move
+
 
 def regret_matching(regret_sum_current_set: dict[Move, float], possible_moves: list[Move]) -> dict[Move, float]:
     """

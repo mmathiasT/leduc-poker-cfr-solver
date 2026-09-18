@@ -1,4 +1,5 @@
-from games.kuhn_poker import Move, GameState, Card
+from games.kuhn_poker import Card, GameState, Move
+
 
 def test_check_check_payoff():
     state = GameState([Card.Q, Card.J], [Move.CHECK, Move.CHECK])

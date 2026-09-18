@@ -1,5 +1,6 @@
-from games.kuhn_poker import Card, GameState, Move
 from cfr.cfr_kuhn import CFRTrainer
+from games.kuhn_poker import Card, GameState, Move
+
 
 def possible_hands() -> list[list[Card]]:
     result: list[list[Card]] = []

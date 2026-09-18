@@ -1,6 +1,8 @@
-from train_leduc import training
-from games.leduc_poker import Move, Card
 import pytest
+
+from games.leduc_poker import Card, Move
+from train_leduc import training
+
 
 @pytest.fixture(scope="module")
 def strategy() -> dict[tuple, dict[Move, float]]:

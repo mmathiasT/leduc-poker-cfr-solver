@@ -1,4 +1,5 @@
-from games.leduc_poker import Move, GameState, Card
+from games.leduc_poker import Card, GameState, Move
+
 
 def test_raise_cap_removes_raise_option():
     state = GameState([Card.K, Card.Q], [Move.BET, Move.RAISE, Move.RAISE], [1, 1],

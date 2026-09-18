@@ -1,5 +1,6 @@
-from django.apps import AppConfig
 import pickle
+
+from django.apps import AppConfig
 
 STRATEGY = None
 

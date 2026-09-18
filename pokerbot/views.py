@@ -1,7 +1,10 @@
 import random
-from django.shortcuts import render, redirect
-from games.leduc_poker import GameState, Card, Move
+
+from django.shortcuts import redirect, render
+
+from games.leduc_poker import Card, GameState, Move
 from pokerbot.apps import STRATEGY
+
 
 # Create your views here.
 def save_game_state(session, game_state):

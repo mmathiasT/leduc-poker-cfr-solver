@@ -1,5 +1,7 @@
 # Leduc Hold'em CFR Bot
 
+[![tests](https://github.com/mmathiasT/leduc-poker-cfr-solver/actions/workflows/tests.yml/badge.svg)](https://github.com/mmathiasT/leduc-poker-cfr-solver/actions/workflows/tests.yml)
+
 A poker bot for Leduc Hold'em (a small poker game used in game theory research),
 trained from scratch with Counterfactual Regret Minimization (CFR). Includes a small
 Django web app to play against it.
@@ -55,10 +57,22 @@ python3 manage.py runserver
 
 Then open `http://127.0.0.1:8000/start/`.
 
+`DEBUG` defaults to `True` and `SECRET_KEY` falls back to a dev-only value, so this
+works locally with no extra setup. For anything beyond local dev, set
+`DJANGO_SECRET_KEY`, `DJANGO_DEBUG=False`, and `DJANGO_ALLOWED_HOSTS` in the
+environment — see `.env.example`.
+
 ## Running the tests
 
 ```bash
 pytest
+```
+
+## Linting
+
+```bash
+pip install -r requirements-dev.txt
+ruff check .
 ```
 
 ## Project structure

@@ -1,6 +1,8 @@
-from games.leduc_poker import Card, GameState, Move
-from cfr.cfr_leduc import CFRTrainer
 from itertools import permutations
+
+from cfr.cfr_leduc import CFRTrainer
+from games.leduc_poker import Card, GameState, Move
+
 
 def possible_hands() -> list[tuple[Card, Card, Card]]:
     deck = [Card.J, Card.J, Card.Q, Card.Q, Card.K, Card.K]

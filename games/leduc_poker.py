@@ -1,4 +1,5 @@
-from enum import IntEnum, Enum
+from enum import Enum, IntEnum
+
 
 class Move(Enum):
     CHECK = "check"

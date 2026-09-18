@@ -8,7 +8,7 @@ Django web app to play against it.
 
 | Before the round | After the round |
 |---|---|
-| ![Before the round](pregame_screenshot.png) | ![After the round](postgame_screenshot.png) |
+| ![Before the round](docs/pregame_screenshot.png) | ![After the round](docs/postgame_screenshot.png) |
 
 ## Why Leduc Hold'em
 
@@ -30,7 +30,7 @@ a strategy that can't be reliably exploited.
   matching to pick a strategy proportional to it. The strategy actually used is the
   *average* over all training iterations, not the last one.
 - **`train_leduc.py` / `build_leduc_strategy.py`** — runs training and saves the
-  result to `leduc_strategy.pkl`, so the web app doesn't retrain on every startup.
+  result to `data/leduc_strategy.pkl`, so the web app doesn't retrain on every startup.
 - **`pokerbot/`** — the Django app. Tracks game state per session, and samples the
   bot's move from its trained probabilities (not just the most likely one).
 
@@ -76,4 +76,6 @@ cfr/            CFR trainer
 pokerbot/       Django app
 webapp/         Django project config
 tests/          engine tests + trained-strategy sanity checks
+data/           trained strategy (leduc_strategy.pkl)
+docs/           README images
 ```

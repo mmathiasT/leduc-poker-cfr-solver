@@ -9,5 +9,5 @@ class PokerbotConfig(AppConfig):
 
     def ready(self):
         global STRATEGY
-        with open("leduc_strategy.pkl", "rb") as file:
+        with open("data/leduc_strategy.pkl", "rb") as file:
             STRATEGY = pickle.load(file)
